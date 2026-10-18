@@ -1,79 +1,38 @@
-🚀 Backend de Gestão de Usuários (Node.js + Express)
+# 🚀 API de Gestão de Usuários
 
-Um sistema completo de backend e frontend interativo para gestão de usuários, desenvolvido com foco em performance, segurança e arquitetura profissional.
+Um servidor backend robusto e interativo desenvolvido em Node.js, construído com foco em boas práticas de mercado e executado em ambiente Linux (WSL).
 
-📖 Sobre o Projeto
+## 🛠️ Tecnologias Utilizadas
 
-Este projeto foi construído para consolidar conhecimentos fundamentais no ecossistema Node.js, evoluindo desde a criação manual de rotas com o módulo nativo http até a implementação de um servidor robusto utilizando Express.js. O sistema possui um painel administrativo protegido, onde as operações de deleção física de dados no banco são restritas apenas a usuários autenticados via Token (JWT).
+* **Node.js**: Plataforma base e criação do servidor nativo[cite: 6].
+* **Express**: Framework utilizado para facilitar o roteamento e o tratamento de requisições.
+* **SQLite3**: Banco de dados relacional leve para armazenamento local seguro.
+* **JWT (JSON Web Token)**: Sistema de segurança para autenticação e proteção de rotas.
+* **Dotenv**: Gerenciamento de variáveis de ambiente e proteção de credenciais[cite: 2].
 
-✨ Funcionalidades
+## ⚙️ Funcionalidades do Sistema
 
-Roteamento Dinâmico: Rotas gerenciadas pelo Express.js.
+A aplicação realiza a comunicação contínua entre cliente e servidor através da serialização e desserialização de dados em JSON[cite: 9], contando com as seguintes funcionalidades:
 
-Banco de Dados Relacional: Integração com SQLite para persistência de dados.
+* **Autenticação Segura**: Login de Administrador (DBA) que gera um token JWT com tempo de expiração.
+* **CRUD de Usuários**: 
+  * Listagem de usuários no banco de dados.
+  * Cadastro de novos usuários (com tratamento para evitar e-mails duplicados).
+  * Exclusão de usuários (Rota protegida, exigindo o Token de Autenticação).
+* **Interface Estática**: Frontend integrado utilizando Glassmorphism, servido diretamente pelo Express com a configuração correta de `Content-Type`[cite: 11].
 
-Segurança (Autenticação): Proteção de rotas críticas (DELETE) utilizando JSON Web Tokens (JWT).
+## 📂 Estrutura e Gerenciamento
 
-Interface Profissional: Frontend servido estaticamente pelo próprio backend, utilizando design Glassmorphism e comunicação via API fetch().
+O coração lógico das dependências deste projeto é o `package.json`[cite: 2]. Ele atua como o manifesto da aplicação, definindo atalhos como o script de inicialização e gerenciando pacotes de terceiros (Express, JWT, SQLite) essenciais para o funcionamento do servidor em produção[cite: 2].
 
-Separação de Privilégios: Visão comum para adição/leitura e visão de Administrador (DBA) para exclusão de registros.
+## 🚀 Como Executar o Projeto Localmente
 
-🛠️ Tecnologias Utilizadas
+### Pré-requisitos
+* Ter o [Node.js](https://nodejs.org/) instalado (preferencialmente via NVM em ambiente WSL/Linux).
+* Git instalado na máquina.
 
-Node.js (Ambiente de execução)
+### Passo a Passo
 
-Express.js (Framework web)
-
-SQLite3 (Banco de dados relacional leve)
-
-JSON Web Token (JWT) (Segurança e autenticação)
-
-Dotenv (Gerenciamento seguro de variáveis de ambiente)
-
-HTML/CSS/JS (Vanilla) (Frontend)
-
-Desenvolvido e testado em ambiente WSL (Ubuntu).
-
-⚙️ Como executar localmente
-
-Siga as instruções abaixo para rodar o projeto na sua máquina:
-
-Pré-requisitos
-
-Node.js instalado (recomendado via NVM)
-
-Git
-
-Instalação
-
-Clone este repositório:
-
-git clone https://github.com/SEU_USUARIO/nome-do-repositorio.git
-
-
-Acesse a pasta do projeto:
-
-cd nome-do-repositorio
-
-
-Instale as dependências:
-
-npm install
-
-
-Crie um arquivo .env na raiz do projeto contendo as seguintes variáveis:
-
-DBA_USER=admin
-DBA_SENHA=senha123
-JWT_SECRET=sua_chave_super_secreta_aqui
-
-
-Inicie o servidor:
-
-npm start
-
-
-Acesse o painel de controle pelo seu navegador:
-http://localhost:3000
-
-Desenvolvido por HelioDev.
+1. **Clone o repositório:**
+   ```bash
+   git clone [https://github.com/heliomachado-dev/api-gestao-usuarios.git](https://github.com/heliomachado-dev/api-gestao-usuarios.git)
