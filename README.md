@@ -35,4 +35,4 @@ O coração lógico das dependências deste projeto é o `package.json`[cite: 2]
 
 1. **Clone o repositório:**
    ```bash
-   git clone [https://github.com/heliomachado-dev/api-gestao-usuarios.git](https://github.com/heliomachado-dev/api-gestao-usuarios.git)
+   git clone [https://github.com/heliomachado-dev/api-gestao-usuarios.git](https://github.com/heliomachado-dev/api-gestao-usuarios.git)# Painel_de_Controle-Nuvem-
