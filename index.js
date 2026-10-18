@@ -1,16 +1,21 @@
 require('dotenv').config();
 const express = require('express');
-const db = require('./database'); // Conexão com o PostgreSQL vinda do database.js
+const path = require('path');
+const db = require('./database');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-app.use(express.json()); // Permite ler o corpo das requisições em JSON
-app.use(express.static('public')); // Serve a interface visual (HTML/CSS)
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Variáveis de ambiente seguras (vindas do .env ou das configurações do Render)
-const CHAVE_SECRETA = process.env.JWT_SECRET;
-const ADMIN_USER = process.env.DBA_USER;
-const ADMIN_SENHA = process.env.DBA_SENHA;
+const CHAVE_SECRETA = process.env.JWT_SECRET || 'chave_secreta_padrao';
+const ADMIN_USER = process.env.DBA_USER || 'admin';
+const ADMIN_SENHA = process.env.DBA_SENHA || 'admin';
+
+// Garante que a rota principal (/) carregue o ficheiro index.html da pasta public
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Rota de Login (Gera e devolve o Token JWT)
 app.post('/login', (req, res) => {
@@ -22,7 +27,7 @@ app.post('/login', (req, res) => {
     return res.status(401).json({ erro: "Credenciais inválidas." });
 });
 
-// Middleware de Proteção de Rotas (Tranca de segurança)
+// Middleware de Proteção de Rotas
 function verificarAutenticacao(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -36,13 +41,12 @@ function verificarAutenticacao(req, res, next) {
             return res.status(401).json({ erro: "Token inválido ou expirado." });
         }
         req.usuario = usuarioDecodificado;
-        next(); // Se o token for válido, libera o acesso para a rota
+        next();
     });
 }
 
-// --- ROTAS DO BANCO DE DADOS (POSTGRESQL) ---
+// --- ROTAS DA BASE DE DADOS (POSTGRESQL) ---
 
-// Rota para listar usuários
 app.get('/usuarios', async (req, res) => {
     try {
         const result = await db.query("SELECT * FROM usuarios");
@@ -52,11 +56,9 @@ app.get('/usuarios', async (req, res) => {
     }
 });
 
-// Rota para cadastrar novos usuários
 app.post('/usuarios', async (req, res) => {
     const { nome, email } = req.body; 
     try {
-        // Os parâmetros $1 e $2 protegem a aplicação contra ataques de SQL Injection
         const result = await db.query(
             "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING id",
             [nome, email]
@@ -67,7 +69,6 @@ app.post('/usuarios', async (req, res) => {
     }
 });
 
-// Rota protegida para deletar usuários (Exige Token do DBA)
 app.delete('/usuarios/:id', verificarAutenticacao, async (req, res) => {
     const id = req.params.id; 
     try {
@@ -79,11 +80,9 @@ app.delete('/usuarios/:id', verificarAutenticacao, async (req, res) => {
     }
 });
 
-// Inicia o servidor na porta da nuvem (Render) ou na porta local (3000)
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor Express rodando na porta ${PORT}`));
+// A porta é declarada apenas uma única vez aqui!
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor Express rodando na porta ${PORT}`));
 
-// Permite que a Vercel execute o seu servidor Express
+// Exporta a aplicação para a Vercel
 module.exports = app;
